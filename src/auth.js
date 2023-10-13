@@ -11,7 +11,9 @@ const oauth2Client = new google.auth.OAuth2(
 
 // const scopes = [
 //   'https://www.googleapis.com/auth/analytics',
-//   'https://www.googleapis.com/auth/analytics.edit'
+//   'https://www.googleapis.com/auth/analytics.edit',
+//   'https://www.googleapis.com/auth/drive',
+//   'https://www.googleapis.com/auth/spreadsheets'
 // ];
 
 // const url = oauth2Client.generateAuthUrl({
@@ -56,7 +58,7 @@ const getToken = async () => {
   if( res.status != 200){
     console.log('error')
   }
-  console.log(res.data.access_token);
   return res.data.access_token
+  
 }
 module.exports = getToken

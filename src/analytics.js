@@ -2,20 +2,19 @@ const axios = require('axios');
 const getToken = require('./auth');
 
 
-const config = (method, url, token, data) => {
+const createRequestConfig = (method, url, token, data) => {
   return {
-    method: method,
-    url: url,
+    method,
+    url,
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    data: data,
+    ...(data && { data }),
   };
 }
 
-const reportsInsertAPI = async () => {
-  const token = await getToken();
+const insertReport = async (token) => {
   const url = "https://www.googleapis.com/analytics/v3/management/accounts/164163844/webproperties/UA-164163844-10/profiles/231362837/unsampledReports";
 
   const data = {
@@ -28,24 +27,31 @@ const reportsInsertAPI = async () => {
   };
 
   try {
-    const res = await axios(config('post', url, token, data));
+    const res = await axios(createRequestConfig('post', url, token, data));
     return res.data
   } catch (error) {
-    console.error(error);
+    throw new Error(`Error al insertar el informe: ${error.message}`);
   }
 
 }
 
-const getReportsAPI = async () => {
+const getReports = async () => {
   try {
     const token = await getToken();
-    const url = await reportsInsertAPI;
-    console.log(url);
-    const res = await axios(config('get', url, token, {}));
+    const data = await insertReport(token);
+    const url = data.selfLink;
+    const res = await axios(createRequestConfig('get', url, token));
     console.log(res);
+    console.log(token);
     return res.data
   } catch (error) {
-    console.error(error);
+    throw new Error(`Error al insertar el informe: ${error.message}`);
   }
 }
-getReportsAPI()
+getReports()
+  .then((data) => {
+    console.log('Informes obtenidos:', data);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
