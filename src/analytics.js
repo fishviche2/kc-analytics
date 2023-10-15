@@ -13,21 +13,27 @@ const createRequestConfig = (method, url, token, data) => {
     ...(data && { data }),
   };
 }
-
-const insertReport = async (token) => {
-  const url = "https://www.googleapis.com/analytics/v3/management/accounts/164163844/webproperties/UA-164163844-10/profiles/231362837/unsampledReports";
-
-  const data = {
-    "end-date": "2023-07-31",
-    "metrics": "ga:users",
-    "start-date": "2023-07-01",
-    "title": "test",
-    "dimensions": "ga:date,ga:source",
-    "filters": ""
-  };
+const generateURL = (webPropertyId, profileId) => {
+  return `https://www.googleapis.com/analytics/v3/management/accounts/164163844/webproperties/${webPropertyId}/profiles/${profileId}/unsampledReports`
+}
+const insertReport = async (token, data) => {
+  // const url = "https://www.googleapis.com/analytics/v3/management/accounts/164163844/webproperties/UA-164163844-10/profiles/231362837/unsampledReports";
+  
 
   try {
-    const res = await axios(createRequestConfig('post', url, token, data));
+    const temp_data = {
+      "end-date": data['end-date'],
+      "metrics": data['metrics'],
+      "start-date": data['start-date'],
+      "title": `${data['start-date']} ${data['end-date']}`,
+      "dimensions": data['dimensions'],
+      "filters": data['filters']
+    };
+    console.log(temp_data)
+    let url = generateURL(data['property_id'], data['profile_id'])
+    console.log(url)
+    const res = await axios(createRequestConfig('post', url, token, temp_data));
+    console.log('res', res);
     return res.data
   } catch (error) {
     throw new Error(`Error al insertar el informe: ${error.message}`);
@@ -48,10 +54,11 @@ const getReports = async () => {
     throw new Error(`Error al insertar el informe: ${error.message}`);
   }
 }
-getReports()
-  .then((data) => {
-    console.log('Informes obtenidos:', data);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+// getReports()
+//   .then((data) => {
+//     console.log('Informes obtenidos:', data);
+//   })
+//   .catch((error) => {
+//     console.error(error);
+//   });
+module.exports = insertReport;

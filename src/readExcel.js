@@ -11,7 +11,7 @@ const extractData = (rowData, columnHeaders) => {
     row.values.forEach((cell, index) => {
       const header = columnHeaders[index];
       if (cell.userEnteredValue && header) {
-        dataRow[header] = cell.userEnteredValue.stringValue || cell.userEnteredValue.numberValue;
+        dataRow[header] = cell.userEnteredValue.stringValue || cell.userEnteredValue.numberValue || '';
       }
     });
     return dataRow;
