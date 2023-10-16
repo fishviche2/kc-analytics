@@ -17,9 +17,6 @@ const generateURL = (webPropertyId, profileId) => {
   return `https://www.googleapis.com/analytics/v3/management/accounts/164163844/webproperties/${webPropertyId}/profiles/${profileId}/unsampledReports`
 }
 const insertReport = async (token, data) => {
-  // const url = "https://www.googleapis.com/analytics/v3/management/accounts/164163844/webproperties/UA-164163844-10/profiles/231362837/unsampledReports";
-  
-
   try {
     const temp_data = {
       "end-date": data['end-date'],
@@ -29,11 +26,8 @@ const insertReport = async (token, data) => {
       "dimensions": data['dimensions'],
       "filters": data['filters']
     };
-    console.log(temp_data)
     let url = generateURL(data['property_id'], data['profile_id'])
-    console.log(url)
     const res = await axios(createRequestConfig('post', url, token, temp_data));
-    console.log('res', res);
     return res.data
   } catch (error) {
     throw new Error(`Error al insertar el informe: ${error.message}`);

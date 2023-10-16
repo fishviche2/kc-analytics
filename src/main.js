@@ -11,12 +11,28 @@ async function main() {
       'Content-Type': 'application/json',
     }
     const arrayParams = await fetchGoogleSheetsData(headers);
-    arrayParams.forEach(async (el) => {
-      let response = await insertReport(token, el);
-      // console.log(response);S
-    });
-    // console.log('response: ', arrayParams);
-    
+    // const resulsts = await Promise.all(
+    //   arrayParams.map(async (el) => {
+    //     try {
+    //       const response = await insertReport(token, el);
+    //       console.log(response);
+    //       return response
+    //     } catch (error) {
+    //       // Maneja errores aquí si es necesario
+    //       console.error(`Error al insertar el informe: ${error.message}`);
+    //     }
+    //   })
+    // )
+    for (const el of arrayParams) {
+      try {
+        const response = await insertReport(token, el);
+        console.log(response);
+      } catch (error) {
+        // Maneja errores aquí si es necesario
+        console.error(`Error al insertar el informe: ${error.message}`);
+      }
+    }
+
   } catch (error) {
     throw new Error(`Error al insertar el informe: ${error.message}`);
   }

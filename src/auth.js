@@ -44,15 +44,6 @@ oauth2Client.setCredentials({
   refresh_token
 });
 
-// oauth2Client.getAccessToken()
-//   .then((response) => {
-//     const accessToken = response.res.data.access_token;
-//     console.log('Token de acceso obtenido:', accessToken);
-//   })
-//   .catch((error) => {
-//     console.error('Error al obtener el token de acceso:', error);
-//   });
-
 const getToken = async () => {
   const { res } = await oauth2Client.getAccessToken()
   if( res.status != 200){
