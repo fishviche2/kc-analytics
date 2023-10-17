@@ -2,22 +2,19 @@ const axios = require('axios');
 const getToken = require('./auth');
 
 
-const createRequestConfig = (method, url, token, data) => {
+const createRequestConfig = (method, url, headers, data) => {
   return {
     method,
     url,
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
+    headers,
     ...(data && { data }),
   };
 }
 const generateURL = (webPropertyId, profileId) => {
   return `https://www.googleapis.com/analytics/v3/management/accounts/164163844/webproperties/${webPropertyId}/profiles/${profileId}/unsampledReports`
 }
-const insertReport = async (token, data) => {
-  try {
+const insertReport = async (headers, data) => {
+  // try {
     const temp_data = {
       "end-date": data['end-date'],
       "metrics": data['metrics'],
@@ -27,22 +24,18 @@ const insertReport = async (token, data) => {
       "filters": data['filters']
     };
     let url = generateURL(data['property_id'], data['profile_id'])
-    const res = await axios(createRequestConfig('post', url, token, temp_data));
+    const res = await axios(createRequestConfig('post', url, headers, temp_data));
     return res.data
-  } catch (error) {
-    throw new Error(`Error al insertar el informe: ${error.message}`);
-  }
+  // } catch (error) {
+  //   throw new Error(`Error al insertar el informe: ${error.message}`);
+  // }
 
 }
 
-const getReports = async () => {
+const getReports = async (headers, data) => {
   try {
-    const token = await getToken();
-    const data = await insertReport(token);
     const url = data.selfLink;
-    const res = await axios(createRequestConfig('get', url, token));
-    console.log(res);
-    console.log(token);
+    const res = await axios(createRequestConfig('get', url, headers));
     return res.data
   } catch (error) {
     throw new Error(`Error al insertar el informe: ${error.message}`);
@@ -55,4 +48,7 @@ const getReports = async () => {
 //   .catch((error) => {
 //     console.error(error);
 //   });
-module.exports = insertReport;
+module.exports = {
+  insertReport,
+  getReports
+};

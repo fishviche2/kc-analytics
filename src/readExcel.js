@@ -1,6 +1,4 @@
 const axios = require('axios');
-
-const GOOGLE_SHEETS_URL = 'https://sheets.googleapis.com/v4/spreadsheets/19WEbP0weeoSVmzYE6-qXpMYLramLSDUu3L5GPHD5h30?includeGridData=True';
 const TARGET_SHEET_TITLE = 'COMPLETED';
 const COLUMN_HEADERS = ['property_id', 'profile_id', 'metrics', 'dimensions', 'filters', 'start-date', 'end-date'];
 
@@ -20,6 +18,7 @@ const extractData = (rowData, columnHeaders) => {
 
 const getDataFromSheets = async (headers) => {
   try {
+    const GOOGLE_SHEETS_URL = process.env.GOOGLE_SHEETS_URL;
     const response = await axios.get(GOOGLE_SHEETS_URL, { headers });
     return response.data.sheets;
   } catch (error) {
@@ -45,16 +44,4 @@ const fetchGoogleSheetsData = async (headers) => {
   return null;
 };
 
-// async function fetchGoogleSheetsData(headers) {
-//   try {
-//     const url = 'https://sheets.googleapis.com/v4/spreadsheets/19WEbP0weeoSVmzYE6-qXpMYLramLSDUu3L5GPHD5h30?includeGridData=True';
-//     const response = await axios.get(url, { headers });
-//     const sheets = response.data.sheets
-//     // const sheets = excelData.sheets;
-//     const data = manipulatingData(sheets);
-//     return data.slice(1);
-//   } catch (error) {
-//     throw new Error(`Error al insertar el informe: ${error.message}`);
-//   }
-// };
 module.exports = fetchGoogleSheetsData;

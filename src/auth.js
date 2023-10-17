@@ -1,13 +1,8 @@
 const { google } = require('googleapis');
 const { refresh_token } = require('../token.json')
-require('dotenv').config();
+// require('dotenv').config();
 
 // Instanciar cliente
-const oauth2Client = new google.auth.OAuth2(
-  process.env.CLIENT_ID,
-  process.env.CLIENT_SECRET,
-  'http://localhost'
-);
 
 // const scopes = [
 //   'https://www.googleapis.com/auth/analytics',
@@ -40,16 +35,27 @@ const oauth2Client = new google.auth.OAuth2(
 //   console.log('Refresh token:', refreshToken);
 // });
 
-oauth2Client.setCredentials({
-  refresh_token
-});
 
-const getToken = async () => {
-  const { res } = await oauth2Client.getAccessToken()
+
+const getHeaders = async () => {
+  const oauth2Client = new google.auth.OAuth2(
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET,
+    'http://localhost'
+  );
+  oauth2Client.setCredentials({
+    refresh_token
+  });
+  const { res } = await oauth2Client.getAccessToken();
   if( res.status != 200){
     console.log('error')
   }
-  return res.data.access_token
+  let token = res.data.access_token;
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  }
+  return headers
   
 }
-module.exports = getToken
+module.exports = getHeaders
