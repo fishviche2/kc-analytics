@@ -27,7 +27,9 @@ async function getDocuments() {
     const querySnapshot = await collectionRef.get();
     const documents = [];
     querySnapshot.forEach((document) => {
-      documents.push(document.data());
+      const docData = document.data();
+      const docId = document.id;
+      documents.push({ docId, ...docData });
     });
     return documents;
   } catch (error) {
@@ -35,6 +37,15 @@ async function getDocuments() {
   }
 }
 
+async function updateDocument(id) {
+  const documentRef = collectionRef.doc(id);
+  try {
+    await documentRef.update({status: 'COMPLETED'});
+    return 'Documento actualizado con éxito';
+  } catch (error) {
+    return 'Error al actualizar el documento:';
+  }
+}
 // async function main() {
 //   admin.initializeApp({
 //     credential: admin.credential.cert(serviceAccount)
@@ -56,5 +67,6 @@ async function getDocuments() {
 
 module.exports = {
   insertDocuments,
-  getDocuments
+  getDocuments,
+  updateDocument
 }

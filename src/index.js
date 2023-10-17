@@ -3,7 +3,8 @@ const fetchGoogleSheetsData = require('./readExcel');
 const getHeaders = require('./auth');
 const {
   insertDocuments,
-  getDocuments
+  getDocuments,
+  updateDocument
 } = require('./firebase');
 const {
   insertReport,
@@ -16,12 +17,14 @@ require('dotenv').config();
 
 app.get('/get-reports', async (req, res) => {
   let headers = await getHeaders();
+  console.log(headers);
   let documents = await getDocuments();
   for (let i = 0; i < documents.length; i++) {
     let response = await getReports(headers, documents[i]);
-    console.log(response)
-    // Me falta validar qcuando no es compelted
-    // Y me falta actualizar el estado en la BD
+    if (documents[i].status !== 'COMPLETED') {
+      await updateDocument(documents[i].docId);
+      let documentId = response.driveDownloadDetails.documentId
+    }
   }
   res.send('get-reports')
 })
