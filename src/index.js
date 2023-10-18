@@ -9,7 +9,8 @@ const {
 const {
   insertReport,
   getReports
-} = require('./analytics')
+} = require('./analytics');
+const moveFileToFolder = require('./drive');
 // Settings
 const app = express();
 const port = 3000;
@@ -24,6 +25,8 @@ app.get('/get-reports', async (req, res) => {
     if (documents[i].status !== 'COMPLETED') {
       await updateDocument(documents[i].docId);
       let documentId = response.driveDownloadDetails.documentId
+      console.log(documentId)
+      moveFileToFolder(documentId)
     }
   }
   res.send('get-reports')
