@@ -9,7 +9,8 @@ const {
 const {
   insertReport,
   getReports
-} = require('./analytics')
+} = require('./analytics');
+const moveFileToFolder = require('./drive');
 // Settings
 const app = express();
 const port = 3000;
@@ -24,6 +25,8 @@ app.get('/get-reports', async (req, res) => {
     if (documents[i].status !== 'COMPLETED') {
       await updateDocument(documents[i].docId);
       let documentId = response.driveDownloadDetails.documentId
+      console.log(documentId)
+      moveFileToFolder(documentId)
     }
   }
   res.send('get-reports')
@@ -39,6 +42,7 @@ app.post('/generate-reports', async (req, res) => {
   res.send(await insertDocuments(documents));
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
