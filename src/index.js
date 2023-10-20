@@ -42,6 +42,7 @@ app.post('/generate-reports', async (req, res) => {
   res.send(await insertDocuments(documents));
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
