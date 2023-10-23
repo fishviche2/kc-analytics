@@ -48,7 +48,7 @@ const getHeaders = async () => {
   });
   const { res } = await oauth2Client.getAccessToken();
   if( res.status != 200){
-    console.log('error')
+    console.log('error de autorización')
   }
   let token = res.data.access_token;
   const headers = {

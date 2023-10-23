@@ -14,7 +14,8 @@ const generateURL = (webPropertyId, profileId) => {
   return `https://www.googleapis.com/analytics/v3/management/accounts/164163844/webproperties/${webPropertyId}/profiles/${profileId}/unsampledReports`
 }
 const insertReport = async (headers, data) => {
-  // try {
+  console.log(headers, data)
+  try {
     const temp_data = {
       "end-date": data['end-date'],
       "metrics": data['metrics'],
@@ -26,9 +27,11 @@ const insertReport = async (headers, data) => {
     let url = generateURL(data['property_id'], data['profile_id'])
     const res = await axios(createRequestConfig('post', url, headers, temp_data));
     return res.data
-  // } catch (error) {
-  //   throw new Error(`Error al insertar el informe: ${error.message}`);
-  // }
+  } catch (error) {
+    console.log("Error Angel")
+    console.log(error)
+    throw new Error(`Error al insertar el informe: ${error.message}`);
+  }
 
 }
 
@@ -38,7 +41,8 @@ const getReports = async (headers, data) => {
     const res = await axios(createRequestConfig('get', url, headers));
     return res.data
   } catch (error) {
-    throw new Error(`Error al insertar el informe: ${error.message}`);
+    console.log( Error(`Error al insertar el informe: ${error.message}`));
+    return error
   }
 }
 // getReports()

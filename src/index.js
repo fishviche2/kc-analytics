@@ -22,11 +22,14 @@ app.get('/get-reports', async (req, res) => {
   let documents = await getDocuments();
   for (let i = 0; i < documents.length; i++) {
     let response = await getReports(headers, documents[i]);
-    if (documents[i].status !== 'COMPLETED') {
-      await updateDocument(documents[i].docId);
-      let documentId = response.driveDownloadDetails.documentId
-      console.log(documentId)
-      moveFileToFolder(documentId)
+    if (response.status == 200){
+      if (documents[i].status !== 'COMPLETED') {
+        if(response.status == 'COMPLETED'){
+          await updateDocument(documents[i].docId);
+          let documentId = response.driveDownloadDetails.documentId
+          moveFileToFolder(documentId, headers)
+        }
+      }
     }
   }
   res.send('get-reports')
